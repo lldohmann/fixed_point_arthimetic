@@ -4,14 +4,16 @@
 #include <stdlib.h>
 #include <string.h>
 #include <gb/metasprites.h>
-#include "Alice.h"
-#include "Hud.h"
+#include "../res/Alice.h"
+#include "../res/Hud.h"
+#include "../res/fixed_point_arthmetic.h"
 
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
 #define ABS(x) ((x < 0) ? -x : x)
 
 #define FLOOR_Y 100
+#define GRAVITY 10
 
 #define ALICE_RUN_FRAMECOUNT 3
 
@@ -20,6 +22,11 @@ uint16_t aliceX = 80; // FACE VALUE (HOLDS FRACTIONAL PART)
 uint16_t aliceDrawX = 80; // TRUE VALUE
 uint8_t aliceFrame = 0; // FACE VALUE (HOLDS FRACTIONAL PART)
 uint16_t aliceDrawFrame; // TRUE VALUE
+
+uint16_t aliceY = FLOOR_Y;
+uint16_t aliceDrawY = FLOOR_Y;
+int8_t initJumpSpeed = -24;
+
 uint8_t aliceDirection;
 int8_t speed = 24;
 int8_t currentSpeed=0;
@@ -30,30 +37,47 @@ uint8_t joypadPrevious=0;
 uint16_t answer = 8738;
 
 // DEFINE ALICE METASPRITES
-const metasprite_t alice_metasprite0[] = {
+const metasprite_t alice_run0[] = {
     {.dy=-16, .dx=-8, .dtile=0, .props=0},
     {.dy=0, .dx=8, .dtile=2, .props=0},
     {.dy=16, .dx=-8, .dtile=8, .props=0},
     {.dy=0, .dx=8, .dtile=10, .props=0},
     METASPR_TERM
 };
-const metasprite_t alice_metasprite1[] = {
+const metasprite_t alice_run1[] = {
     {.dy=-16, .dx=-8, .dtile=0, .props=0},
     {.dy=0, .dx=8, .dtile=2, .props=0},
     {.dy=16, .dx=-8, .dtile=12, .props=0},
     {.dy=0, .dx=8, .dtile=14, .props=0},
     METASPR_TERM
 };
-const metasprite_t alice_metasprite2[] = {
+const metasprite_t alice_run2[] = {
     {.dy=-16, .dx=-8, .dtile=0, .props=0},
     {.dy=0, .dx=8, .dtile=2, .props=0},
     {.dy=16, .dx=-8, .dtile=16, .props=0},
     {.dy=0, .dx=8, .dtile=18, .props=0},
     METASPR_TERM
 };
-const metasprite_t* const alice_metasprites[3] = {
-    alice_metasprite0, alice_metasprite1, alice_metasprite2
+const metasprite_t alice_crouch[] = {
+    {.dy=16, .dx = -8, .dtile=20, .props=0},
+    {.dy=0, .dx=8, .dtile=22, .props=0},
+    METASPR_TERM
 };
+const metasprite_t* const alice_metasprites[4] = {
+    alice_run0, alice_run1, alice_run2, alice_crouch
+};
+
+void Jump()
+{
+    aliceY-= initJumpSpeed; // this is alice's velocity we're calculating
+    // Draw Alice at the true value
+    aliceDrawY=aliceY>>4;
+}
+
+void ApplyGravity() {
+    aliceY+=GRAVITY;
+    aliceDrawY=aliceY>>4;
+}
 
 int8_t HandleInput()
 {
@@ -82,12 +106,20 @@ int8_t HandleInput()
     }
     else if (joypadCurrent & J_DOWN)
     {
-        speed--;
+        speed = 0;
+    }
+    else if (joypadCurrent & J_A)
+    {
+        Jump();
     }
     else{
         if (currentSpeed!=0)
         {
             currentSpeed-=2;
+        }
+        if (aliceDrawY != FLOOR_Y)
+        {
+            ApplyGravity();
         }
     }
     return movement;
@@ -102,6 +134,8 @@ void printFloat16(uint16_t num)
 void main(void)
 {
     set_sprite_data(0, 40, AliceTileLabel); // put alice tiles in VRAM
+    struct fixed_point number = 12;
+    printBinary(number);
     // INIT graphics
     SHOW_BKG;
     SHOW_SPRITES;
@@ -111,10 +145,6 @@ void main(void)
     aliceX = 80;
     aliceDrawX = aliceX;
     aliceDrawFrame = aliceFrame;
-
-    //uint8_t startingSprite=0;
-    //startingSprite+=move_metasprite(alice_metasprite, 0, startingSprite, aliceDrawX, FLOOR_Y);
-    //hide_sprites_range(startingSprite, 40);
 
     // Loop forever
     while(1) { 
@@ -146,9 +176,16 @@ void main(void)
         }
         else 
         {
-            // draw with our standing frame 0
-            aliceFrame=0;
-            aliceDrawFrame=0;
+            if (joypadCurrent & J_DOWN)
+            {
+                aliceDrawFrame = 3;
+            }
+            else 
+            {
+                // draw with our standing frame 0
+                aliceFrame=0;
+                aliceDrawFrame=0;
+            }
         }
 
 		// Game main loop processing goes here

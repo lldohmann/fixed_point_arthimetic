@@ -1,19 +1,22 @@
 {
+    "env": {
+        "commonIncludePath": [
+            "${env:GBDK_HOME}/include",
+            "${workspaceFolder}/include"
+        ]
+      },
     "configurations": [
         {
-            "name": "Win32",
-            "includePath": [
-                "${workspaceFolder}/**",
-                "C:/gbdk/include"
-            ],
+            "name": "GB",
             "defines": [
-                "_DEBUG",
-                "UNICODE",
-                "_UNICODE"
-            ],
-            "configurationProvider": "ms-vscode.makefile-tools",
-            "compilerPath": "C:\\gbdk\\bin\\lcc"
+                "__TARGET_gb",
+                "__PORT_sm83"
+            ], 
+            "includePath": [
+                "${workspaceFolder}/include"
+            ]
         }
     ],
-    "version": 4
+    "version": 4,
+    "enableConfigurationSquiggles": true
 }

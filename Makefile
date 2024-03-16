@@ -8,17 +8,12 @@ GBDK_HOME = ../../../
 
 LCC = $(GBDK_HOME)bin/lcc 
 
-# You can uncomment the line below to turn on debug output
-# LCC = $(LCC) -debug
-CFLAGS    += -Wl-y -Wf-debug
 # You can set the name of the .gb ROM file here
 PROJECTNAME    = Alice
 
 BINS	    = $(PROJECTNAME).gb
 CSOURCES   := $(wildcard *.c)
 ASMSOURCES := $(wildcard *.s)
-
-# CFLAGS    += -Wl-y -debug #ADDED IN THX SelvinPL
 
 all:	$(BINS)
 
@@ -28,8 +23,7 @@ compile.bat: Makefile
 
 # Compile and link all source files in a single call to LCC
 $(BINS):	$(CSOURCES) $(ASMSOURCES)
-	$(LCC) -o --debug $@ $(CSOURCES) $(ASMSOURCES)
+	$(LCC) -o $@ $(CSOURCES) $(ASMSOURCES)
 
 clean:
 	rm -f *.o *.lst *.map *.gb *.ihx *.sym *.cdb *.adb *.asm
-
