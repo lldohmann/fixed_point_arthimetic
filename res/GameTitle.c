@@ -5,11 +5,8 @@
 
 void GameTitleSetup()
 {
-    DISPLAY_OFF;
-    HIDE_BKG;
-    HIDE_SPRITES;
     set_bkg_data(0, Pond_TILE_COUNT, Pond_tiles);
-    set_bkg_tiles(0, 0, Pond_WIDTH, Pond_HEIGHT, Pond_map);
+    set_bkg_tiles(0, 0, 20, 18, Pond_map);
     SHOW_BKG;
     SHOW_SPRITES;
     DISPLAY_ON;

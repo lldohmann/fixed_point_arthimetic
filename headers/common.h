@@ -1,5 +1,6 @@
-#define GAMETITLE 0 
-#define COREGAMELOOP 1
+#define GAMEFIRSTLOAD 0
+#define GAMETITLE 1
+#define COREGAMELOOP 2
 
 extern uint8_t joypadPrevious, joypadCurrent;
 

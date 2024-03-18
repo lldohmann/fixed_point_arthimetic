@@ -1,2 +1,2 @@
 REM Automatically generated from Makefile
-..\..\..\bin\lcc -o Alice.gb src/main.c graphics/Alice_Tiles.c res/fixed_point_arithmetic.c res/player.c graphics/Background.c graphics/Pond.c graphics/Numbers_Tiles.c
+..\..\..\bin\lcc -o Alice.gb src/main.c graphics/Alice_Tiles.c res/fixed_point_arithmetic.c res/player.c graphics/Background.c graphics/Pond.c graphics/Numbers_Tiles.c res/CoreGameLoop.c res/GameTitle.c res/common.c
