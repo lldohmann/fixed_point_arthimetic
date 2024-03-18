@@ -94,6 +94,8 @@ void PlayerUpdate(struct player *ptr)
             ptr->faceFrame = 0;
             ptr->drawFrame = 0;
         } */
+        ptr->faceFrame = 0;
+        ptr->drawFrame = 0;
     }
 }
 

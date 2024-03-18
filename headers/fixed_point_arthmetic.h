@@ -3,19 +3,16 @@
 #include <stdint.h>
 #include <stdio.h>
 
-typedef struct {
-    uint16_t face, true;
-    uint8_t scale;
-} fixed_point;
-//void printFixedPoint(fixed_point number, int x, int y);
-
+#define MAX(x, y) (((x) > (y)) ? (x) : (y))
+#define MIN(x, y) (((x) < (y)) ? (x) : (y))
+#define ABS(x) ((x < 0) ? -x : x)
 /**
  * Converts number to binary and prints out the result. NOT IMPLEMENTED!
  * 
  * @param number
  * A fixed point struct number.
 */
-void printBinary(fixed_point number);
+void DrawBinary(uint8_t x, uint8_t y, int16_t n, int8_t digits);
 
 /**
  * Prints out a number onto the screen. NEED TO EDIT TO ACTUALLY PRINT NUMBERS

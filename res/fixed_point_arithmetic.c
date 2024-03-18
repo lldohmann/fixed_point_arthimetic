@@ -11,26 +11,6 @@
 #include <stdio.h>
 #include <string.h>
 
-/*
-* A class that contains the 16 bit fixed point number, it's scale (decimal place), & true int value
-*/
-typedef struct {
-    uint16_t face, true;
-    uint8_t scale;
-} fixed_point;
-/**
-void printBinary(fixed_point number)
-{
-    unsigned char buffer[16] = {'0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'};
-    for (uint8_t i = 15; i >= 0; i--)
-    {
-        *buffer-- = (number.true & 1) + '0';
-        number.true >>=1;
-    }
-    printf(buffer);
-}
-*/
-
 // CUSTOM FUNCTION TO PRINT NUMBERS OF A SPECIFIED AMOUNT OF DIGITS
 void DrawNumber(uint8_t x, uint8_t y, int16_t number, uint8_t digits)
 {
@@ -50,13 +30,34 @@ void DrawNumber(uint8_t x, uint8_t y, int16_t number, uint8_t digits)
     // Increase the VRAM address each iteration to move to the next tile
     for (uint8_t i=0; i<digits-len;i++)
     {
-        set_vram_byte(vramAddr++, 272);
+        set_vram_byte(vramAddr++, 240); // 240 is the tile number with a 0
     }
 
     // Draw our number
     // Increase the VRAM address each iteration to move to the next tile
     for (uint8_t i=0; i<len; i++)
     {
-        set_vram_byte(vramAddr++, (buffer[i] -'0')+272);
+        set_vram_byte(vramAddr++, (buffer[i] -'0')+240); // 272
+    }
+}
+
+// CUSTOM FUNCTION TO PRINT NUMBERS OF A SPECIFIED AMOUNT OF DIGITS
+void DrawBinary(uint8_t x, uint8_t y, int16_t n, int8_t digits)
+{
+    // The background address of the first digit
+    uint8_t *vramAddr = get_bkg_xy_addr(x,y); 
+
+    uint8_t c, k;
+    for (c = digits - 1; c >= 0; c--)
+    {
+        k = n >> c;
+        if (k & 1)
+        {
+            set_vram_byte(vramAddr++, 241); 
+        }
+        else 
+        {
+            set_vram_byte(vramAddr++, 240); 
+        }
     }
 }
